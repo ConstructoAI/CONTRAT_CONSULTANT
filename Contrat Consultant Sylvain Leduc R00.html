@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrat de Service de Consultant - Sylvain Leduc</title>
+    <style>
+        /* Variables CSS */
+        :root {
+            --navy-dark: #0a1628;
+            --navy-primary: #1e3a5f;
+            --navy-medium: #2c5282;
+            --navy-light: #3b6ea5;
+            --navy-accent: #4a90e2;
+            --navy-bg: #f0f4f8;
+            --white: #ffffff;
+            --gray-light: #f7f9fc;
+            --gray-medium: #e2e8f0;
+            --gray-dark: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.15);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.2);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            line-height: 1.5;
+            color: var(--navy-dark);
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f4f8 100%);
+            min-height: 100vh;
+            position: relative;
+            font-size: 13px; /* Taille de base optimisée pour réduire le nombre de pages */
+        }
+        
+        /* Barre de contrôle fixe */
+        .control-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-primary) 100%);
+            color: var(--white);
+            padding: 15px 20px;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .control-bar h3 {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .control-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-btn:active {
+            transform: translateY(0);
+        }
+        
+        .control-btn.primary {
+            background: var(--navy-accent);
+            border-color: var(--navy-accent);
+        }
+        
+        .control-btn.primary:hover {
+            background: #5ba0f2;
+        }
+        
+        .control-btn.success {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        .control-btn.danger {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+        
+        /* Indicateur de sauvegarde */
+        .save-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: var(--success);
+            color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 1001;
+            font-weight: 600;
+            font-size: 14px;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .save-indicator.show {
+            display: block;
+        }
+        
+        .save-indicator.error {
+            background: var(--danger);
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(20px); }
+        }
+        
+        /* Container principal - Format exact 8.5" x 11" */
+        .container {
+            width: 8.5in;  /* Largeur fixe du papier lettre */
+            max-width: 100%;
+            min-height: 11in; /* Hauteur minimum d'une page */
+            margin: 80px auto 40px;
+            background: var(--white);
+            box-shadow: var(--shadow-lg);
+            border-radius: 12px;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease;
+            position: relative;
+        }
+        
+        /* Classe pour prévisualisation d'impression */
+        body.print-preview .container {
+            box-shadow: 0 0 0 2px var(--navy-accent), var(--shadow-lg);
+        }
+        
+        /* Indicateur de format de page */
+        .container::after {
+            content: "Format Lettre US (8.5\" × 11\")";
+            position: absolute;
+            top: -25px;
+            right: 10px;
+            font-size: 10px;
+            color: var(--gray-dark);
+            background: var(--white);
+            padding: 2px 8px;
+            border-radius: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Header du document - Optimisé pour impression compacte */
+        .document-header {
+            background: linear-gradient(135deg, var(--navy-primary) 0%, var(--navy-medium) 100%);
+            color: var(--white);
+            padding: 30px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .document-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .document-header h1 {
+            font-size: 1.8em;
+            margin-bottom: 6px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .document-header h2 {
+            font-size: 0.95em;
+            font-weight: 300;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Contenu - Optimisé pour papier lettre avec espacements réduits */
+        .content {
+            padding: 0.4in; /* Padding réduit pour maximiser l'espace */
+        }
+        
+        /* Box d'instruction - Compacte */
+        .instruction-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid var(--navy-accent);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-sm);
+            font-size: 0.9em;
+        }
+        
+        .instruction-box svg {
+            flex-shrink: 0;
+            color: var(--navy-accent);
+            width: 20px;
+            height: 20px;
+        }
+        
+        .instruction-box p {
+            margin: 0;
+            color: var(--navy-dark);
+            font-weight: 500;
+        }
+        
+        /* Parties section - Optimisée pour format lettre compact */
+        .parties-section {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 18px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: var(--shadow-sm);
+            page-break-inside: avoid;
+        }
+        
+        .party {
+            flex: 1;
+            min-width: 240px;
+        }
+        
+        .party h3 {
+            color: var(--navy-primary);
+            margin-bottom: 6px;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .party p {
+            margin: 3px 0;
+            font-size: 0.85em;
+            color: var(--navy-dark);
+            line-height: 1.4;
+        }
+        
+        /* Articles - Optimisés pour pagination et réduction de taille */
+        .article {
+            margin: 20px 0;
+            padding: 18px;
+            background: var(--white);
+            border-left: 4px solid var(--navy-medium);
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            page-break-inside: avoid; /* Évite la coupure en impression */
+        }
+        
+        .article:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(5px);
+        }
+        
+        .article h2 {
+            color: var(--navy-primary);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+            page-break-after: avoid; /* Garde le titre avec le contenu */
+        }
+        
+        .article h3 {
+            color: var(--navy-medium);
+            margin: 15px 0 10px 0;
+            font-size: 1.1em;
+            page-break-after: avoid; /* Garde le sous-titre avec le contenu */
+        }
+        
+        .article ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .article li {
+            margin: 5px 0;
+            line-height: 1.5;
+            color: var(--navy-dark);
+            font-size: 0.95em;
+        }
+        
+        .article p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        /* Options tarifaires - Optimisées pour pagination compacte */
+        .tarif-options {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            page-break-inside: avoid; /* Évite la coupure des options */
+        }
+        
+        .tarif-option {
+            flex: 1;
+            min-width: 250px;
+            padding: 16px;
+            border: 2px solid var(--gray-medium);
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            page-break-inside: avoid; /* Évite la coupure d'une option */
+        }
+        
+        .tarif-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--navy-accent), var(--navy-medium));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .tarif-option:hover {
+            border-color: var(--navy-accent);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-5px);
+        }
+        
+        .tarif-option:hover::before {
+            transform: scaleX(1);
+        }
+        
+        /* Tooltip pour aide */
+        #weeklyHours[contenteditable="false"] {
+            cursor: not-allowed;
+            position: relative;
+        }
+        
+        #weeklyHours[contenteditable="false"]:hover::after {
+            content: "Sélectionnez l'Option A pour définir les heures";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--navy-dark);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            margin-bottom: 5px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        @keyframes selectPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(74, 144, 226, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(74, 144, 226, 0);
+            }
+        }
+        
+        .tarif-option.selected {
+            border-color: var(--navy-accent);
+            background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2), var(--shadow-md);
+            transform: translateY(-2px);
+            animation: selectPulse 0.5s ease-out;
+        }
+        
+        .tarif-option.selected::before {
+            transform: scaleX(1);
+        }
+        
+        .tarif-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: var(--navy-accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .tarif-option h4 {
+            color: var(--navy-primary);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tarif-option ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tarif-option li {
+            padding: 5px 0;
+            color: #555;
+        }
+        
+        .tarif-option li strong {
+            color: #333;
+        }
+        
+        .tarif-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--navy-accent), var(--navy-medium));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .tarif-option:hover {
+            border-color: var(--navy-accent);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-5px);
+        }
+        
+        .tarif-option:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .tarif-option h4 {
+            color: var(--navy-primary);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Checkboxes - Style natif avec améliorations minimales */
+        input[type="checkbox"].option-checkbox {
+            /* Dimensions et espacement */
+            width: 20px !important;
+            height: 20px !important;
+            min-width: 20px !important;
+            min-height: 20px !important;
+            margin: 0 10px 0 0 !important;
+            padding: 0;
+            
+            /* Apparence */
+            cursor: pointer;
+            vertical-align: middle;
+            position: relative;
+            
+            /* Forcer le style natif du navigateur */
+            -webkit-appearance: checkbox !important;
+            -moz-appearance: checkbox !important;
+            appearance: auto !important;
+            
+            /* Couleur d'accent pour navigateurs modernes */
+            accent-color: var(--navy-accent);
+            
+            /* Zoom pour meilleure visibilité */
+            zoom: 1.2;
+        }
+        
+        /* État hover */
+        input[type="checkbox"].option-checkbox:hover {
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+        }
+        
+        /* État focus */
+        input[type="checkbox"].option-checkbox:focus {
+            outline: 2px solid var(--navy-accent);
+            outline-offset: 2px;
+        }
+        
+        /* État coché - S'assurer que le crochet est visible */
+        input[type="checkbox"].option-checkbox:checked {
+            background-color: var(--navy-accent);
+            accent-color: var(--navy-accent);
+        }
+        
+        /* Label pour améliorer la zone cliquable */
+        .tarif-option h4 {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 12px;
+            color: var(--navy-primary);
+            font-size: 1em;
+        }
+        
+        .tarif-option h4 label {
+            flex: 1;
+            user-select: none;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tarif-option.selected {
+            border-color: var(--navy-accent);
+            background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 100%);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2), var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .tarif-option.selected::before {
+            transform: scaleX(1);
+        }
+        
+        .tarif-option.selected::after {
+            content: '✓ Sélectionné';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: var(--navy-accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        /* Section spéciale IA - Compacte */
+        .ai-section {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.05) 0%, rgba(74, 144, 226, 0.05) 100%);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 12px 0;
+            border-left: 4px solid var(--navy-accent);
+        }
+        
+        .ai-section strong {
+            color: var(--navy-primary);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        .ai-section ul {
+            margin-left: 20px;
+        }
+        
+        .ai-section li {
+            font-size: 0.9em;
+            margin: 4px 0;
+        }
+        
+        /* Champs éditables */
+        [contenteditable="true"] {
+            background: #fff8dc;
+            padding: 2px 8px;
+            border-bottom: 2px solid var(--navy-accent);
+            min-width: 100px;
+            display: inline-block;
+            transition: var(--transition);
+            border-radius: 4px 4px 0 0;
+        }
+        
+        [contenteditable="true"]:hover {
+            background: #ffeb3b;
+            cursor: text;
+        }
+        
+        [contenteditable="true"]:focus {
+            outline: none;
+            background: var(--white);
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.2);
+        }
+        
+        /* Box d'ajustement - Compacte */
+        .ajustement-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe8a1 100%);
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .ajustement-box h4 {
+            color: #856404;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        .ajustement-box p {
+            font-size: 0.85em;
+            margin: 5px 0;
+        }
+        
+        .ajustement-box ul {
+            margin-left: 18px;
+            margin-top: 5px;
+        }
+        
+        .ajustement-box li {
+            font-size: 0.85em;
+            margin: 3px 0;
+        }
+        
+        /* Section signature - Compacte */
+        .signature-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            page-break-inside: avoid;
+        }
+        
+        .signature-section h3 {
+            color: var(--navy-primary);
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .signatures {
+            display: flex;
+            justify-content: space-around;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .signature-block {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .signature-block h4 {
+            color: var(--navy-medium);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85em;
+        }
+        
+        .signature-line {
+            border-bottom: 2px solid var(--navy-dark);
+            margin: 20px 0 8px 0;
+            min-width: 200px;
+        }
+        
+        /* Annexes - Compacte */
+        .annexes {
+            margin-top: 25px;
+            padding: 18px;
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            page-break-inside: avoid;
+        }
+        
+        .annexes h3 {
+            color: var(--navy-primary);
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .annexes p {
+            font-size: 0.85em;
+            font-style: italic;
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 9px;
+            color: #666;
+            border-top: 2px solid var(--navy-primary);
+            padding-top: 15px;
+        }
+        
+        /* Highlight */
+        .highlight {
+            background: linear-gradient(120deg, #ffed4e 0%, #ffed4e 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            padding: 2px 5px;
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 22, 40, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .loading-overlay.show {
+            display: flex;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mode impression - Optimisé pour 8.5" x 11" */
+        @media print {
+            @page {
+                size: letter; /* 8.5" x 11" */
+                margin: 0.4in; /* Marges réduites pour maximiser l'espace */
+            }
+            
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+                font-size: 11pt; /* Taille optimale pour impression */
+            }
+            
+            .control-bar {
+                display: none !important;
+            }
+            
+            .loading-overlay {
+                display: none !important;
+            }
+            
+            .save-indicator {
+                display: none !important;
+            }
+            
+            .container {
+                box-shadow: none;
+                margin: 0;
+                border-radius: 0;
+                max-width: 100%;
+                width: 100%;
+                padding: 0;
+            }
+            
+            .content {
+                padding: 0.3in; /* Padding ajusté pour maximiser l'espace */
+            }
+            
+            .instruction-box {
+                display: none !important;
+            }
+            
+            [contenteditable="true"] {
+                border-bottom: 1px solid #333 !important;
+                background: transparent !important;
+                padding: 2px 4px !important;
+            }
+            
+            /* Affichage des options cochées */
+            .option-checkbox {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                width: 16px !important;
+                height: 16px !important;
+                /* Garder l'apparence native pour l'impression */
+            }
+            
+            .tarif-option.selected {
+                background: #e6f3ff !important;
+                border: 2px solid var(--navy-accent) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .tarif-option.selected::after {
+                display: block !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* Éviter les coupures de page */
+            .article {
+                page-break-inside: avoid;
+                margin: 20px 0;
+                padding: 15px;
+            }
+            
+            .signature-section {
+                page-break-inside: avoid;
+                page-break-before: auto;
+            }
+            
+            .tarif-options {
+                page-break-inside: avoid;
+            }
+            
+            .document-header {
+                background: var(--navy-primary) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                padding: 25px !important;
+            }
+            
+            .document-header h1 {
+                font-size: 20pt !important;
+            }
+            
+            .document-header h2 {
+                font-size: 12pt !important;
+            }
+            
+            .article h2 {
+                font-size: 14pt !important;
+                page-break-after: avoid;
+            }
+            
+            .article h3 {
+                font-size: 12pt !important;
+                page-break-after: avoid;
+            }
+            
+            .article, .tarif-option, .ai-section {
+                box-shadow: none !important;
+            }
+            
+            /* Optimisation des listes */
+            ul {
+                margin-left: 20px !important;
+            }
+            
+            li {
+                margin: 4px 0 !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* Ajustement des sections */
+            .parties-section {
+                padding: 15px !important;
+                margin: 15px 0 !important;
+            }
+            
+            .annexes {
+                page-break-before: auto;
+                margin-top: 20px !important;
+                padding: 15px !important;
+            }
+            
+            .footer {
+                margin-top: 20px !important;
+                padding-top: 10px !important;
+            }
+        }
+        
+        /* Responsive - Maintien des proportions lettre */
+        @media (max-width: 850px) {
+            .container {
+                width: 100%;
+                margin: 100px 10px 40px;
+                border-radius: 8px;
+            }
+            
+            .container::after {
+                display: none;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .control-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .control-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .document-header h1 {
+                font-size: 1.6em;
+            }
+            
+            .parties-section {
+                flex-direction: column;
+            }
+            
+            .tarif-options {
+                flex-direction: column;
+            }
+            
+            .signatures {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            body {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Barre de contrôle -->
+    <div class="control-bar">
+        <h3>📋 CONTRAT DE SERVICE - FORMAT LETTRE (8.5" × 11")</h3>
+        <div class="control-buttons">
+            <button class="control-btn primary" onclick="window.print()" title="Imprimer le contrat">
+                🖨️ Imprimer
+            </button>
+            <button class="control-btn success" onclick="saveContract()" title="Sauvegarder les modifications">
+                💾 Sauvegarder
+            </button>
+            <button class="control-btn" onclick="exportPDF()" title="Exporter en PDF">
+                📄 Export PDF
+            </button>
+            <button class="control-btn" onclick="exportData()" title="Exporter les données">
+                📥 Exporter
+            </button>
+            <button class="control-btn" onclick="loadExternalData()" title="Charger des données depuis un fichier">
+                📤 Charger
+            </button>
+            <button class="control-btn" onclick="testCheckboxManually()" title="Tester les options tarifaires">
+                🔧 Tester Options
+            </button>
+            <button class="control-btn danger" onclick="resetForm()" title="Réinitialiser le formulaire">
+                🔄 Réinitialiser
+            </button>
+        </div>
+    </div>
+
+    <!-- Indicateur de sauvegarde -->
+    <div class="save-indicator" id="saveIndicator">
+        <span id="saveMessage">✓ Sauvegarde effectuée</span>
+    </div>
+
+    <div class="container">
+        <div class="document-header">
+            <h1>CONTRAT DE SERVICE DE CONSULTANT</h1>
+            <h2>CHARGÉ DE PROJET, ESTIMATEUR & SOLUTIONS TECHNOLOGIQUES</h2>
+        </div>
+        
+        <div class="content">
+            <div class="instruction-box">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p>📝 Document optimisé pour impression sur papier lettre (8.5" × 11") • Les champs en jaune sont modifiables - Cliquez dessus pour les remplir</p>
+            </div>
+            
+            <div class="parties-section">
+                <div class="party">
+                    <h3>Entre:</h3>
+                    <p><strong>Sylvain Leduc</strong></p>
+                    <p>1760 rue Jacques-Cartier Sud</p>
+                    <p>Farnham, QC, J2N 1Y8</p>
+                    <p>Téléphone: (514) 820-1972</p>
+                    <p>Courriel: sylvainleduc2000@gmail.com</p>
+                    <p><em>(ci-après appelé le « Consultant »)</em></p>
+                </div>
+                
+                <div class="party">
+                    <h3>Et:</h3>
+                    <p><strong contenteditable="true" data-field="company">[Nom de l'entreprise cliente]</strong></p>
+                    <p contenteditable="true" data-field="address">[Adresse]</p>
+                    <p contenteditable="true" data-field="city">[Ville, Province, Code postal]</p>
+                    <p>Téléphone: <span contenteditable="true" data-field="phone">[___________]</span></p>
+                    <p>Courriel: <span contenteditable="true" data-field="email">[___________]</span></p>
+                    <p><em>(ci-après appelé le « Client »)</em></p>
+                </div>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 1 - OBJET DU CONTRAT</h2>
+                <p>Le Consultant s'engage à fournir au Client des services professionnels de chargé de projet et d'estimateur pour des projets de construction, selon les besoins ponctuels du Client et conformément aux termes et conditions énoncés dans le présent contrat.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 2 - DESCRIPTION DES SERVICES</h2>
+                <p>Le Consultant fournira les services suivants, sans s'y limiter:</p>
+                
+                <h3>2.1 Services de Gestion de Projet</h3>
+                <ul>
+                    <li>Planification et coordination des projets de construction</li>
+                    <li>Gestion des échéanciers et des jalons de projet</li>
+                    <li>Coordination avec les sous-traitants et fournisseurs</li>
+                    <li>Suivi de l'avancement des travaux</li>
+                    <li>Gestion de la documentation de projet</li>
+                    <li>Préparation de rapports d'avancement</li>
+                </ul>
+                
+                <h3>2.2 Services d'Estimation</h3>
+                <ul>
+                    <li>Analyse des plans et devis</li>
+                    <li>Préparation d'estimations détaillées des coûts</li>
+                    <li>Analyse comparative des soumissions</li>
+                    <li>Évaluation des coûts de main-d'œuvre et matériaux</li>
+                    <li>Préparation de budgets prévisionnels</li>
+                    <li>Révision et ajustement des estimations selon l'évolution du projet</li>
+                </ul>
+                
+                <h3>2.3 Services de Dessin</h3>
+                <ul>
+                    <li>Préparation de plans techniques et architecturaux</li>
+                    <li>Dessins d'exécution et de détails de construction</li>
+                    <li>Plans de rénovation et d'agrandissement</li>
+                    <li>Dessins techniques pour soumissions</li>
+                    <li>Mise à jour et modification de plans existants</li>
+                    <li>Conversion de croquis en plans professionnels</li>
+                    <li>Modélisation et visualisation de projets</li>
+                </ul>
+                
+                <h3>2.4 Services de Programmation d'Applications de Construction et Intégration IA</h3>
+                <ul>
+                    <li>Développement d'applications personnalisées pour la gestion de chantiers</li>
+                    <li>Création d'outils de suivi de projets et d'inventaires</li>
+                    <li>Programmation de calculateurs et estimateurs automatisés</li>
+                    <li>Développement de tableaux de bord et rapports interactifs</li>
+                    <li>Intégration de systèmes de gestion existants</li>
+                    <li>Applications mobiles pour utilisation sur chantier</li>
+                    <li>Automatisation de processus de soumission et facturation</li>
+                    <li>Base de données personnalisées pour projets de construction</li>
+                </ul>
+                
+                <div class="ai-section">
+                    <strong>Intégration de solutions d'intelligence artificielle dans les entreprises:</strong>
+                    <ul>
+                        <li>Analyse prédictive pour l'estimation des coûts et délais</li>
+                        <li>Chatbots et assistants virtuels pour support client et employés</li>
+                        <li>Automatisation intelligente des processus administratifs</li>
+                        <li>Systèmes de reconnaissance d'images pour inspection de chantiers</li>
+                        <li>Optimisation des ressources par apprentissage automatique</li>
+                        <li>Génération automatique de rapports et documentation</li>
+                        <li>Analyse de données pour amélioration continue des processus</li>
+                        <li>Formation et accompagnement à l'adoption d'outils IA</li>
+                    </ul>
+                </div>
+                
+                <h3>2.5 Services Complémentaires</h3>
+                <ul>
+                    <li>Conseil en optimisation des coûts</li>
+                    <li>Support technique pour appels d'offres</li>
+                    <li>Analyse de rentabilité des projets</li>
+                    <li>Assistance dans les négociations contractuelles</li>
+                </ul>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 3 - MODALITÉS TARIFAIRES</h2>
+                <p>Le Client sélectionne l'option tarifaire suivante (cocher une case):</p>
+                
+                <div class="tarif-options">
+                    <div class="tarif-option">
+                        <h4><span class="checkbox"></span> OPTION A - ENGAGEMENT GARANTI</h4>
+                        <ul>
+                            <li>Taux horaire: <strong>35,00 $ CAD/heure</strong></li>
+                            <li>Engagement minimum: <strong>10 heures par semaine</strong></li>
+                            <li>Facturation: <strong>Hebdomadaire</strong></li>
+                            <li><em>Cette option requiert un engagement ferme du nombre d'heures convenu</em></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tarif-option">
+                        <h4><span class="checkbox"></span> OPTION B - FLEXIBILITÉ ABSOLUE</h4>
+                        <ul>
+                            <li>Taux horaire: <strong>75,00 $ CAD/heure</strong></li>
+                            <li>Aucun minimum d'heures requis</li>
+                            <li>Facturation: <strong>Selon utilisation réelle</strong></li>
+                            <li>Maximum: <strong>9,99 heures par semaine</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <p><strong>Option sélectionnée:</strong> <span contenteditable="true" data-field="option">_____________</span><br>
+                <strong>Nombre d'heures hebdomadaires (si Option A):</strong> <span contenteditable="true" data-field="hours">_____________</span></p>
+                
+                <div class="ajustement-box">
+                    <h4>3.1 Ajustement annuel des tarifs</h4>
+                    <p>Les taux horaires mentionnés ci-dessus seront automatiquement augmentés de <span class="highlight">5% par année</span> à la date anniversaire du présent contrat. Cette augmentation s'applique à l'option tarifaire sélectionnée et vise à refléter l'évolution du coût de la vie et l'expérience accrue du Consultant.</p>
+                    <p><strong>Exemple d'évolution tarifaire:</strong></p>
+                    <ul>
+                        <li>Option A: Année 1: 35,00$/h → Année 2: 36,75$/h → Année 3: 38,59$/h</li>
+                        <li>Option B: Année 1: 75,00$/h → Année 2: 78,75$/h → Année 3: 82,69$/h</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 4 - MODALITÉS DE PAIEMENT</h2>
+                <p>4.1 Les factures seront émises hebdomadairement pour les services rendus.</p>
+                <p>4.2 Le paiement est dû dans les trente (30) jours suivant la date de facturation.</p>
+                <p>4.3 <strong>Mode de paiement:</strong> Le paiement doit être effectué par <span class="highlight">virement Interac</span> à l'adresse courriel suivante: <strong>sylvainleduc2000@gmail.com</strong></p>
+                <p>4.4 Des frais d'intérêt de 2% par mois (24% annuel) seront appliqués sur tout montant en souffrance.</p>
+                <p>4.5 Les taxes applicables (TPS/TVQ) seront ajoutées aux montants facturés.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 5 - DURÉE ET RÉSILIATION</h2>
+                <p>5.1 Le présent contrat entre en vigueur le <span contenteditable="true" data-field="startDate">_____________</span> et demeure en vigueur pour une période indéterminée.</p>
+                <p>5.2 Chaque partie peut résilier ce contrat moyennant un préavis écrit de quinze (15) jours.</p>
+                <p>5.3 En cas de résiliation, le Client devra payer tous les services rendus jusqu'à la date effective de résiliation.</p>
+                <p>5.4 Pour l'Option A (Engagement Garanti), le Client s'engage à respecter le minimum d'heures hebdomadaires pendant la durée du contrat.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 6 - OBLIGATIONS DU CONSULTANT</h2>
+                <p>Le Consultant s'engage à :</p>
+                <ul>
+                    <li>Fournir les services avec professionnalisme et diligence</li>
+                    <li>Respecter les échéanciers convenus</li>
+                    <li>Maintenir la confidentialité des informations du Client</li>
+                    <li>Fournir des rapports réguliers sur l'avancement des travaux</li>
+                    <li>Être disponible selon l'horaire convenu avec le Client</li>
+                </ul>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 7 - OBLIGATIONS DU CLIENT</h2>
+                <p>Le Client s'engage à :</p>
+                <ul>
+                    <li>Fournir toute l'information nécessaire à la réalisation des services</li>
+                    <li>Donner accès aux sites, documents et ressources requis</li>
+                    <li>Approuver les livrables dans des délais raisonnables</li>
+                    <li>Effectuer les paiements selon les modalités prévues</li>
+                    <li>Respecter l'engagement d'heures minimum (Option A)</li>
+                </ul>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 8 - PROPRIÉTÉ INTELLECTUELLE</h2>
+                <p>8.1 Tous les documents, plans, estimations et autres livrables produits par le Consultant dans le cadre de ce contrat deviennent la propriété du Client après paiement complet.</p>
+                <p>8.2 Le Consultant conserve le droit d'utiliser ses méthodologies et son savoir-faire général.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 9 - CONFIDENTIALITÉ</h2>
+                <p>9.1 Le Consultant s'engage à maintenir confidentielles toutes les informations commerciales, techniques et financières du Client.</p>
+                <p>9.2 Cette obligation de confidentialité survivra à la résiliation du contrat pour une période de deux (2) ans.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 10 - RESPONSABILITÉ ET ASSURANCE</h2>
+                <p>10.1 Le Consultant maintient une assurance responsabilité professionnelle adéquate.</p>
+                <p>10.2 La responsabilité du Consultant est limitée au montant des honoraires perçus pour les services concernés.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 11 - STATUT D'ENTREPRENEUR INDÉPENDANT</h2>
+                <p>11.1 Le Consultant agit à titre d'entrepreneur indépendant et non comme employé du Client.</p>
+                <p>11.2 Le Consultant est responsable de ses propres déductions fiscales et cotisations.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 12 - MODIFICATION DU CONTRAT</h2>
+                <p>Toute modification au présent contrat doit être faite par écrit et signée par les deux parties.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 13 - LOI APPLICABLE</h2>
+                <p>Le présent contrat est régi par les lois de la province de Québec et les lois fédérales canadiennes applicables.</p>
+            </div>
+            
+            <div class="article">
+                <h2>ARTICLE 14 - RÈGLEMENT DES DIFFÉRENDS</h2>
+                <p>Les parties conviennent de tenter de régler à l'amiable tout différend découlant du présent contrat. À défaut d'entente, le différend sera soumis aux tribunaux compétents du Québec.</p>
+            </div>
+            
+            <div class="signature-section">
+                <h3>EN FOI DE QUOI, les parties ont signé le présent contrat:</h3>
+                
+                <div class="signatures">
+                    <div class="signature-block">
+                        <h4>Le Consultant:</h4>
+                        <div class="signature-line"></div>
+                        <p>Sylvain Leduc</p>
+                        <p>Date: <span contenteditable="true" data-field="consultantDate">_____________</span></p>
+                    </div>
+                    
+                    <div class="signature-block">
+                        <h4>Le Client:</h4>
+                        <div class="signature-line"></div>
+                        <p>Nom: <span contenteditable="true" data-field="clientName">_____________</span></p>
+                        <p>Titre: <span contenteditable="true" data-field="clientTitle">_____________</span></p>
+                        <p>Date: <span contenteditable="true" data-field="clientDate">_____________</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="annexes">
+                <h3>ANNEXE A - FEUILLE DE TEMPS</h3>
+                <p>[Modèle de feuille de temps à joindre si nécessaire]</p>
+                
+                <h3>ANNEXE B - DESCRIPTION DÉTAILLÉE DU PROJET INITIAL</h3>
+                <p>[À compléter selon le projet spécifique]</p>
+            </div>
+            
+            <div class="footer">
+                <p><strong>© 2025 Sylvain Leduc - Consultant en Construction et Technologies</strong></p>
+                <p>Ce document est confidentiel et reste la propriété des parties signataires</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // État de l'application
+        let contractData = {};
+        let isDirty = false;
+        let selectedTariffOption = null;
+        let isInitialized = false;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Attendre que tous les éléments soient chargés
+                setTimeout(() => {
+                    loadData();
+                    initializeEventListeners();
+                    checkPrintSize();
+                    testCheckboxes(); // Test des checkboxes
+                    isInitialized = true; // Marquer l'initialisation comme complète
+                    console.log('✅ Contrat initialisé avec succès');
+                    
+                    // Test manuel pour vérifier que les checkboxes fonctionnent
+                    console.log('💡 Pour tester: cliquez sur une option ou utilisez debugState() dans la console');
+                }, 100);
+            } catch (error) {
+                console.error('Erreur lors de l\'initialisation:', error);
+            }
+        });
+
+        // Ajouter les écouteurs d'événements
+        function initializeEventListeners() {
+            // Surveiller les modifications
+            document.querySelectorAll('[contenteditable="true"]').forEach(field => {
+                field.addEventListener('input', function() {
+                    isDirty = true;
+                    
+                    // Validation spéciale pour les heures hebdomadaires
+                    if (field.id === 'weeklyHours' && selectedTariffOption === 'A') {
+                        const value = parseInt(field.innerText);
+                        if (!isNaN(value) && value < 10) {
+                            showNotification('⚠️ Minimum 10 heures par semaine pour l\'Option A', true);
+                            field.innerText = '10';
+                        }
+                    }
+                    
+                    autoSave();
+                });
+            });
+            
+            // Ajouter un événement pour le champ des heures hebdomadaires
+            const hoursField = document.getElementById('weeklyHours');
+            if (hoursField) {
+                hoursField.addEventListener('focus', function() {
+                    if (selectedTariffOption === 'B' || (!selectedTariffOption && !document.getElementById('optionA').checked)) {
+                        showNotification('ℹ️ Veuillez d\'abord sélectionner l\'Option A pour définir les heures', false);
+                        this.blur();
+                    }
+                });
+                
+                hoursField.addEventListener('blur', function() {
+                    if (selectedTariffOption === 'A') {
+                        const value = parseInt(this.innerText);
+                        if (isNaN(value) || value < 10) {
+                            this.innerText = '10';
+                            showNotification('⚠️ Valeur ajustée au minimum de 10 heures', false);
+                        }
+                    }
+                });
+            }
+
+            // Prévenir la perte de données
+            window.addEventListener('beforeunload', function(e) {
+                if (isDirty) {
+                    e.preventDefault();
+                    e.returnValue = 'Des modifications non sauvegardées seront perdues.';
+                }
+            });
+        }
+        
+        // Gestion simplifiée de la sélection des options tarifaires
+        function selectOption(option, evt) {
+            console.log('selectOption appelé:', option);
+            
+            // Si on clique sur la checkbox directement, ne rien faire
+            if (evt && evt.target && (evt.target.type === 'checkbox' || evt.target.tagName === 'LABEL')) {
+                return;
+            }
+            
+            // Sinon, cocher la checkbox et déclencher le changement
+            const checkbox = document.getElementById('option' + option);
+            if (checkbox && !checkbox.checked) {
+                checkbox.checked = true;
+                handleOptionChange(option);
+            }
+        }
+        
+        // Fonction de test manuel des checkboxes
+        function testCheckboxManually() {
+            console.log('=== TEST DES CHECKBOXES ===');
+            
+            // Tester Option A
+            console.log('Test: Sélection Option A...');
+            const optionA = document.getElementById('optionA');
+            if (optionA) {
+                optionA.checked = true;
+                handleOptionChange('A');
+                setTimeout(() => {
+                    console.log('État après Option A:');
+                    debugState();
+                    
+                    // Tester Option B après 2 secondes
+                    console.log('\nTest: Sélection Option B...');
+                    const optionB = document.getElementById('optionB');
+                    if (optionB) {
+                        optionB.checked = true;
+                        handleOptionChange('B');
+                        setTimeout(() => {
+                            console.log('État après Option B:');
+                            debugState();
+                            console.log('=== TEST TERMINÉ ===');
+                            showNotification('✅ Test des options terminé - Vérifiez la console');
+                        }, 1000);
+                    }
+                }, 2000);
+            } else {
+                console.error('❌ Checkbox Option A non trouvée');
+            }
+        }
+        
+        // Test direct de la checkbox au chargement
+        function testCheckboxes() {
+            const optionA = document.getElementById('optionA');
+            const optionB = document.getElementById('optionB');
+            
+            if (optionA && optionB) {
+                console.log('✅ Checkboxes trouvées et prêtes');
+                console.log('Option A cochée:', optionA.checked);
+                console.log('Option B cochée:', optionB.checked);
+            } else {
+                console.error('❌ Checkboxes non trouvées');
+            }
+        }
+        
+        // Fonction de débogage pour vérifier l'état
+        function debugState() {
+            console.log('=== État actuel ===');
+            console.log('Option sélectionnée:', selectedTariffOption);
+            console.log('Option A cochée:', document.getElementById('optionA')?.checked);
+            console.log('Option B cochée:', document.getElementById('optionB')?.checked);
+            console.log('Texte sélectionné:', document.getElementById('selectedOption')?.innerText);
+            console.log('Heures:', document.getElementById('weeklyHours')?.innerText);
+        }
+        
+        function handleOptionChange(option) {
+            console.log('handleOptionChange appelé avec option:', option);
+            
+            // Vérifier que les éléments existent
+            const optionA = document.getElementById('optionA');
+            const optionB = document.getElementById('optionB');
+            
+            if (!optionA || !optionB) {
+                console.error('❌ Éléments d\'option non trouvés');
+                return;
+            }
+            
+            // Forcer l'état correct des checkboxes
+            if (option === 'A') {
+                optionA.checked = true;
+                optionB.checked = false;
+                console.log('✓ Option A cochée');
+            } else if (option === 'B') {
+                optionA.checked = false;
+                optionB.checked = true;
+                console.log('✓ Option B cochée');
+            }
+            
+            const optionDivA = optionA.closest('.tarif-option');
+            const optionDivB = optionB.closest('.tarif-option');
+            const hoursField = document.getElementById('weeklyHours');
+            const selectedOptionField = document.getElementById('selectedOption');
+            
+            if (!optionDivA || !optionDivB || !hoursField || !selectedOptionField) {
+                console.error('❌ Éléments de formulaire manquants');
+                return;
+            }
+            
+            if (option === 'A') {
+                optionDivA.classList.add('selected');
+                optionDivB.classList.remove('selected');
+                selectedTariffOption = 'A';
+                selectedOptionField.innerText = 'Option A - Engagement Garanti';
+                
+                // Activer le champ des heures hebdomadaires
+                hoursField.style.backgroundColor = '#fff8dc';
+                hoursField.contentEditable = true;
+                hoursField.style.opacity = '1';
+                hoursField.style.cursor = 'text';
+                if (hoursField.innerText === '_____________' || hoursField.innerText === 'N/A') {
+                    hoursField.innerText = '10';
+                }
+                hoursField.title = 'Minimum 10 heures par semaine';
+                
+                if (isInitialized) {
+                    showNotification('✓ Option A sélectionnée - Engagement Garanti');
+                }
+                
+            } else if (option === 'B') {
+                optionDivA.classList.remove('selected');
+                optionDivB.classList.add('selected');
+                selectedTariffOption = 'B';
+                selectedOptionField.innerText = 'Option B - Flexibilité Absolue';
+                
+                // Désactiver le champ des heures hebdomadaires
+                hoursField.style.backgroundColor = '#e9ecef';
+                hoursField.contentEditable = false;
+                hoursField.style.opacity = '0.6';
+                hoursField.style.cursor = 'not-allowed';
+                hoursField.innerText = 'N/A';
+                hoursField.title = 'Non applicable pour l\'Option B';
+                
+                if (isInitialized) {
+                    showNotification('✓ Option B sélectionnée - Flexibilité Absolue');
+                }
+            }
+            
+            // Effet visuel sur le récapitulatif
+            if (isInitialized) {
+                const recap = document.getElementById('recapitulatif');
+                if (recap) {
+                    recap.style.transition = 'all 0.3s ease';
+                    recap.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        recap.style.transform = 'scale(1)';
+                    }, 300);
+                }
+            }
+            
+            isDirty = true;
+            if (isInitialized) {
+                autoSave();
+            }
+            
+            // Debug après changement
+            if (isInitialized) {
+                setTimeout(debugState, 100);
+            }
+        }
+
+        // Sauvegarde automatique (avec délai)
+        let autoSaveTimer;
+        function autoSave() {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => {
+                saveContract(true);
+            }, 2000);
+        }
+
+        // Sauvegarder le contrat
+        function saveContract(isAuto = false) {
+            try {
+                contractData = {};
+                document.querySelectorAll('[contenteditable="true"]').forEach(field => {
+                    const fieldName = field.getAttribute('data-field');
+                    if (fieldName) {
+                        contractData[fieldName] = field.innerText;
+                    }
+                });
+                
+                // Sauvegarder l'option tarifaire sélectionnée
+                contractData.selectedTariffOption = selectedTariffOption;
+                contractData.optionAChecked = document.getElementById('optionA').checked;
+                contractData.optionBChecked = document.getElementById('optionB').checked;
+
+                localStorage.setItem('contractData', JSON.stringify(contractData));
+                isDirty = false;
+                
+                showNotification(isAuto ? '✓ Sauvegarde automatique' : '✓ Contrat sauvegardé avec succès');
+            } catch (error) {
+                console.error('Erreur de sauvegarde:', error);
+                showNotification('⚠️ Erreur lors de la sauvegarde', true);
+            }
+        }
+
+        // Charger les données
+        function loadData() {
+            try {
+                // Vérifier si localStorage est disponible
+                if (typeof(Storage) === "undefined") {
+                    console.warn('LocalStorage non disponible');
+                    return;
+                }
+                
+                const savedData = localStorage.getItem('contractData');
+                if (!savedData) {
+                    console.log('Aucune donnée sauvegardée trouvée');
+                    return;
+                }
+                
+                try {
+                    contractData = JSON.parse(savedData);
+                } catch (parseError) {
+                    console.error('Erreur lors du parsing des données:', parseError);
+                    localStorage.removeItem('contractData'); // Nettoyer les données corrompues
+                    return;
+                }
+                
+                // Restaurer les champs éditables
+                if (contractData && typeof contractData === 'object') {
+                    Object.keys(contractData).forEach(fieldName => {
+                        // Ignorer les champs spéciaux
+                        if (fieldName === 'selectedTariffOption' || 
+                            fieldName === 'optionAChecked' || 
+                            fieldName === 'optionBChecked' ||
+                            fieldName === 'exportDate' ||
+                            fieldName === 'version' ||
+                            fieldName === 'documentType') {
+                            return;
+                        }
+                        
+                        const field = document.querySelector(`[data-field="${fieldName}"]`);
+                        if (field && contractData[fieldName]) {
+                            field.innerText = contractData[fieldName];
+                        }
+                    });
+                    
+                    // Restaurer l'option tarifaire sélectionnée
+                    const optionA = document.getElementById('optionA');
+                    const optionB = document.getElementById('optionB');
+                    
+                    if (optionA && optionB) {
+                        if (contractData.optionAChecked === true) {
+                            optionA.checked = true;
+                            // Utiliser un délai pour s'assurer que les éléments sont prêts
+                            setTimeout(() => handleOptionChange('A'), 50);
+                        } else if (contractData.optionBChecked === true) {
+                            optionB.checked = true;
+                            setTimeout(() => handleOptionChange('B'), 50);
+                        }
+                    }
+                    
+                    // Restaurer les valeurs spécifiques après un court délai
+                    setTimeout(() => {
+                        const selectedOptionEl = document.getElementById('selectedOption');
+                        const weeklyHoursEl = document.getElementById('weeklyHours');
+                        
+                        if (selectedOptionEl && contractData.option && contractData.option !== '_____________') {
+                            selectedOptionEl.innerText = contractData.option;
+                        }
+                        if (weeklyHoursEl && contractData.hours && contractData.hours !== '_____________') {
+                            weeklyHoursEl.innerText = contractData.hours;
+                        }
+                    }, 100);
+                    
+                    console.log('✅ Données chargées avec succès');
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                // Ne pas afficher de notification d'erreur au chargement initial
+            }
+        }
+
+        // Exporter les données
+        function exportData() {
+            try {
+                saveContract();
+                
+                // Ajouter des métadonnées
+                const exportData = {
+                    ...contractData,
+                    exportDate: new Date().toISOString(),
+                    version: '1.0',
+                    documentType: 'Contrat de Service Consultant'
+                };
+                
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const date = new Date().toISOString().split('T')[0];
+                const clientName = contractData.company || 'client';
+                const fileName = `contrat_${clientName}_${date}.json`.replace(/\s+/g, '_');
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', fileName);
+                linkElement.click();
+                
+                showNotification('✓ Données exportées avec succès');
+            } catch (error) {
+                console.error('Erreur d\'export:', error);
+                showNotification('⚠️ Erreur lors de l\'export', true);
+            }
+        }
+
+        // Exporter en PDF (avec prévisualisation)
+        function exportPDF() {
+            // Afficher une prévisualisation avant impression
+            showNotification('📄 Aperçu avant impression en format lettre (8.5" × 11")');
+            
+            // Ajouter temporairement une classe pour la prévisualisation
+            document.body.classList.add('print-preview');
+            
+            setTimeout(() => {
+                window.print();
+                document.body.classList.remove('print-preview');
+            }, 500);
+        }
+        
+        // Vérifier la taille du document pour l'impression
+        function checkPrintSize() {
+            const container = document.querySelector('.container');
+            if (container) {
+                // Calcul plus précis basé sur la hauteur réelle d'une page lettre
+                const contentHeight = container.scrollHeight;
+                const pageHeightInPixels = 10 * 96; // 10 pouces utiles (11 - marges) à 96 DPI
+                const estimatedPages = Math.ceil(contentHeight / pageHeightInPixels);
+                
+                console.log(`📄 Document estimé à environ ${estimatedPages} page(s) au format lettre (8.5" × 11")`);
+                
+                // Afficher une info box si le document est optimisé
+                if (estimatedPages <= 7) {
+                    console.log('✅ Document optimisé pour impression');
+                } else if (estimatedPages > 7 && estimatedPages <= 10) {
+                    console.log('📋 Document de taille standard');
+                } else {
+                    console.warn(`⚠️ Document long: ${estimatedPages} pages. Considérez l'impression recto-verso.`);
+                    // Afficher un avertissement discret
+                    setTimeout(() => {
+                        showNotification(`📄 Document d'environ ${estimatedPages} pages - Impression recto-verso recommandée`, false);
+                    }, 2000);
+                }
+                
+                return estimatedPages;
+            }
+            return 0;
+        }
+        
+        // Exposer les fonctions de débogage globalement
+        window.debugState = debugState;
+        window.testCheckboxes = testCheckboxes;
+        window.testCheckboxManually = testCheckboxManually;
+        window.handleOptionChange = handleOptionChange;
+        
+        // Appeler la vérification au chargement et optimiser l'affichage
+        window.addEventListener('load', function() {
+            const pages = checkPrintSize();
+            
+            // Afficher le nombre de pages dans la console et ajuster si nécessaire
+            if (pages > 0) {
+                const indicator = document.querySelector('.container::after');
+                if (indicator) {
+                    // Mettre à jour l'indicateur avec le nombre de pages estimé
+                    console.log(`📄 Contrat optimisé: ~${pages} pages`);
+                }
+            }
+        });
+
+        // Réinitialiser le formulaire
+        function resetForm() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser tous les champs?\n\nCette action est irréversible!')) {
+                document.querySelectorAll('[contenteditable="true"]').forEach(field => {
+                    const defaultText = field.getAttribute('data-field');
+                    field.innerText = '[' + defaultText.charAt(0).toUpperCase() + defaultText.slice(1) + ']';
+                });
+                
+                // Réinitialiser les options tarifaires
+                document.getElementById('optionA').checked = false;
+                document.getElementById('optionB').checked = false;
+                document.querySelectorAll('.tarif-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                document.getElementById('selectedOption').innerText = '_____________';
+                document.getElementById('weeklyHours').innerText = '_____________';
+                document.getElementById('weeklyHours').style.backgroundColor = '#fff8dc';
+                selectedTariffOption = null;
+                
+                localStorage.removeItem('contractData');
+                contractData = {};
+                isDirty = false;
+                
+                showNotification('✓ Formulaire réinitialisé');
+            }
+        }
+
+        // Afficher une notification
+        function showNotification(message, isError = false) {
+            try {
+                const indicator = document.getElementById('saveIndicator');
+                const messageEl = document.getElementById('saveMessage');
+                
+                if (indicator && messageEl) {
+                    messageEl.textContent = message;
+                    indicator.classList.toggle('error', isError);
+                    indicator.classList.add('show');
+                    
+                    // Animation de sortie
+                    setTimeout(() => {
+                        if (indicator) {
+                            indicator.classList.remove('show');
+                            indicator.classList.remove('error');
+                        }
+                    }, 3000);
+                } else {
+                    // Fallback vers console si les éléments n'existent pas
+                    if (isError) {
+                        console.error(message);
+                    } else {
+                        console.log(message);
+                    }
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'affichage de la notification:', error);
+            }
+        }
+
+        // Afficher/masquer le loading
+        function showLoading(show = true) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.classList.toggle('show', show);
+            }
+        }
+    </script>
+</body>
+</html>
